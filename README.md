@@ -11,23 +11,24 @@ This prototype inspects, redacts, and cleanses sensitive corporate data (PII, cr
 
 ---
 
-## ⚡ Quick Start: Importing as an AMP from GitHub
+## 🚀 Quick Start & Deployment
 
-You can deploy this entire prototype automatically in Cloudera AI Workbench directly from GitHub using the **Applied ML Prototypes (AMP)** catalog.
+Choose one of the following methods to deploy this AMP in Cloudera AI (CML).
 
-### Step-by-Step AMP Import Instructions:
+### Method 1: Direct Deployment via Git (Recommended)
 
-1. **Log in** to your Cloudera AI Workbench workspace.
-2. In the left navigation sidebar, click on **AMPs** (Applied ML Prototypes) or **Catalog**.
-3. Click the **New AMP** or **Import Prototype** button.
-4. Select **Git Repository** and paste the GitHub repository URL:
+The fastest way to deploy and test this AMP without setting up a custom catalog.
+
+1. Log in to **Cloudera AI / CML**.
+2. Go to **Projects** and click **New Project**.
+3. Select **Git** as the Initial Setup option.
+4. Enter the Repository URL:
    ```text
-   https://github.com/sanochihi/cloudera-sovereign-guard-amp.git
-   ```
-5. Click **Configure Project**:
-   * **Project Name**: `Cloudera Sovereign Guard`
-   * **Environment**: Default Python 3 Runtime (e.g., Workbench Python 3.10)
-6. Click **Launch AMP**.
+   [https://github.com/sanochihi/cloudera-sovereign-guard-amp.git](https://github.com/sanochihi/cloudera-sovereign-guard-amp.git)
+
+5. Set the project details and click Create Project.
+6. Cloudera AI will automatically detect .project-metadata.yaml and trigger the startup tasks.
+
 
 ### What Happens Automatically:
 Cloudera AI Workbench reads the `.project-metadata.yaml` file at the root of the repository and automatically executes the setup pipeline:
