@@ -24,7 +24,7 @@ The fastest way to deploy and test this AMP without setting up a custom catalog.
 3. Select **Git** as the Initial Setup option.
 4. Enter the Repository URL:
    ```text
-   [https://github.com/sanochihi/cloudera-sovereign-guard-amp.git](https://github.com/sanochihi/cloudera-sovereign-guard-amp.git)
+   https://github.com/sanochihi/cloudera-sovereign-guard-amp.git
 
 5. Set the project details and click Create Project.
 6. Cloudera AI will automatically detect .project-metadata.yaml and trigger the startup tasks.
