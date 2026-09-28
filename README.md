@@ -17,12 +17,12 @@ You can deploy this entire prototype automatically in Cloudera AI Workbench dire
 
 ### Step-by-Step AMP Import Instructions:
 
-1. **Log in** to your Cloudera Machine Learning (CML) / Cloudera AI Workbench workspace.
+1. **Log in** to your Cloudera AI Workbench workspace.
 2. In the left navigation sidebar, click on **AMPs** (Applied ML Prototypes) or **Catalog**.
 3. Click the **New AMP** or **Import Prototype** button.
 4. Select **Git Repository** and paste the GitHub repository URL:
    ```text
-   https://github.com/your-org/cloudera-sovereign-guard.git
+   https://github.com/sanochihi/cloudera-sovereign-guard-amp.git
    ```
 5. Click **Configure Project**:
    * **Project Name**: `Cloudera Sovereign Guard`
@@ -32,7 +32,7 @@ You can deploy this entire prototype automatically in Cloudera AI Workbench dire
 ### What Happens Automatically:
 Cloudera AI Workbench reads the `.project-metadata.yaml` file at the root of the repository and automatically executes the setup pipeline:
 1. **Creates and Runs Dependency Job**: Executes `cml/install_deps.py` to install Python dependencies from `requirements.txt`.
-2. **Deploys Application**: Starts the CML Application (`app.py`), binding it to `CDSW_APP_PORT` on `127.0.0.1`.
+2. **Deploys Application**: Starts the CAI Application (`app.py`), binding it to `CDSW_APP_PORT` on `127.0.0.1`.
 3. **Provides One-Click UI URL**: Generates an authenticated web link to access the live Sovereign Guard UI in your browser.
 
 ---
@@ -42,7 +42,7 @@ Cloudera AI Workbench reads the `.project-metadata.yaml` file at the root of the
 * **🔒 100% Air-Gapped & Sovereign**: Operates entirely within Cloudera AI Workbench without making external internet or CDN calls.
 * **🛡️ Real-Time PII & Secret Redaction**: Automatically redacts sensitive data including credit cards, email addresses, phone numbers, and confidential project keys (`[MASKED_CREDIT_CARD]`, `[MASKED_CONFIDENTIAL]`, etc.).
 * **⚖️ Security Governance Scoring**: Evaluates prompt safety and computes a real-time **Security Score** (0–100%) with alert tags.
-* **🤖 Local LLM Extensible Architecture**: Rule-based engine designed for instant live demos, with ready-to-use hooks to plug in air-gapped **Local LLMs** (e.g., Llama 3 via vLLM or CML Model Deployments).
+* **🤖 Local LLM Extensible Architecture**: Rule-based engine designed for instant live demos, with ready-to-use hooks to plug in air-gapped **Local LLMs** (e.g., Llama 3 via vLLM or CAI Model Deployments).
 * **🖥️ Executive-Ready UI**: Clean, side-by-side comparative layout matching input prompts with cleansed prompts for high-impact demonstrations.
 
 ---
@@ -78,7 +78,7 @@ Cloudera AI Workbench reads the `.project-metadata.yaml` file at the root of the
 
 For fast, deterministic live demo performance without heavy hardware dependencies, this repository uses lightweight regular expressions for PII/secret masking.
 
-In an enterprise production setup on Cloudera AI Workbench, this rule-based engine can be seamlessly replaced or augmented by an air-gapped **Local LLM** (e.g., Llama 3 / Mistral / Qwen served via vLLM or CML Model Deployment API) for zero-shot semantic governance.
+In an enterprise production setup on Cloudera AI Workbench, this rule-based engine can be seamlessly replaced or augmented by an air-gapped **Local LLM** (e.g., Llama 3 / Mistral / Qwen served via vLLM or CAI Model Deployment API) for zero-shot semantic governance.
 
 ### Sample Local LLM Extension (`app.py`):
 ```python
@@ -87,9 +87,9 @@ import requests
 def sanitize_with_local_llm(prompt_text):
     """
     Optional extension: Replace regex rule engine with an air-gapped Local LLM
-    hosted on Cloudera AI Workbench CML Model Endpoint.
+    hosted on Cloudera AI Workbench CAI Model Endpoint.
     """
-    CML_MODEL_ENDPOINT = "http://localhost:8080/v1/chat/completions"
+    CAI_MODEL_ENDPOINT = "http://{ClouderaAI Site}:8080/v1/chat/completions"
     
     system_prompt = (
         "You are an air-gapped AI Sovereign Guard. "
@@ -107,7 +107,7 @@ def sanitize_with_local_llm(prompt_text):
     }
     
     try:
-        response = requests.post(CML_MODEL_ENDPOINT, json=payload, timeout=5)
+        response = requests.post(CAI_MODEL_ENDPOINT, json=payload, timeout=5)
         return response.json()
     except Exception as e:
         # Fallback to rule-based engine if LLM endpoint is offline
@@ -120,16 +120,16 @@ def sanitize_with_local_llm(prompt_text):
 
 If you prefer to clone and run the repository manually without using the AMP automated setup:
 
-1. Clone the repository into your CML Project session:
+1. Clone the repository into your CAI Project session:
    ```bash
-   git clone https://github.com/your-org/cloudera-sovereign-guard.git
+   git clone https://github.com/sanochihi/cloudera-sovereign-guard-amp.git
    cd cloudera-sovereign-guard
    ```
 2. Install Python dependencies:
    ```bash
    pip install -r requirements.txt
    ```
-3. Create a **New Application** in CML Project settings:
+3. Create a **New Application** in CAI Project settings:
    * **Name**: `Cloudera Sovereign Guard`
    * **Script**: `app.py`
    * **Resource Profile**: 1 vCPU / 2GB RAM
