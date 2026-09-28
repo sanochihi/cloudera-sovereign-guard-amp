@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloudera AI Sovereign Guard</title>
+    <style>
+        :root {
+            --cloudera-dark: #0f172a;
+            --cloudera-orange: #ff5900;
+            --bg-gray: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --text-main: #1e293b;
+            --green-accent: #16a34a;
+            --red-accent: #dc2626;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-gray); color: var(--text-main); padding: 20px; }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--cloudera-dark);
+            color: #fff;
+            padding: 16px 24px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .header h1 { font-size: 1.4rem; display: flex; align-items: center; gap: 10px; }
+        .header h1 span { color: var(--cloudera-orange); font-weight: bold; }
+        .badge-offline { background: var(--green-accent); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+        .card-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+
+        .preset-btns { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+        .btn-preset {
+            background: #f1f5f9; border: 1px solid #cbd5e1; padding: 8px 12px; border-radius: 6px;
+            text-align: left; cursor: pointer; font-size: 0.85rem; transition: all 0.2s;
+        }
+        .btn-preset:hover { background: #e2e8f0; border-color: var(--cloudera-orange); }
+
+        /* Left side: Original Prompt */
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            resize: none;
+            margin-bottom: 12px;
+            font-family: inherit;
+        }
+
+        .btn-submit {
+            width: 100%; background: var(--cloudera-orange); color: white; border: none; padding: 12px;
+            border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: opacity 0.2s;
+            margin-top: auto;
+        }
+        .btn-submit:hover { opacity: 0.9; }
+
+        .score-box {
+            display: flex; justify-content: space-between; align-items: center;
+            background: #f8fafc; padding: 10px 16px; border-radius: 8px; margin-bottom: 12px;
+            border: 1px solid var(--border-color);
+        }
+        .score-value { font-size: 1.6rem; font-weight: bold; }
+        .score-safe { color: var(--green-accent); }
+        .score-danger { color: var(--red-accent); }
+
+        .risk-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; min-height: 28px; }
+        .tag { background: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; }
+
+        /* Right side：Cleansed Prompt */
+        .masked-output {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.9rem;
+            height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1><span>Cloudera AI</span> Sovereign Guard</h1>
+    <div class="badge-offline">🔒 AIR-GAPPED & SOVEREIGN</div>
+</div>
+
+<div class="grid-container">
+    <!-- Left: Input -->
+    <div class="card">
+        <div class="card-title">📝 1. Prompt Input / Select Preset</div>
+        
+        <div class="preset-btns">
+            {% for p in presets %}
+            <button class="btn-preset" onclick="loadPreset('{{ p.id }}')">{{ p.label }}</button>
+            {% endfor %}
+        </div>
+
+        <textarea id="inputText" placeholder="Enter text or prompt here..."></textarea>
+        <button class="btn-submit" onclick="processText()">🛡️ Air-Gapped Local Analysis & Submit</button>
+    </div>
+
+    <!-- Right: Results -->
+    <div class="card">
+        <div class="card-title">🛡️ 2. Governance Check & Cleansed Prompt</div>
+        
+        <div class="score-box">
+            <span style="font-weight:600;">Security Score</span>
+            <span id="scoreVal" class="score-value score-safe">100%</span>
+        </div>
+
+        <div id="riskTags" class="risk-tags"></div>
+
+        <div class="card-title" style="font-size:0.9rem; margin-top:4px;">🔒 Cleansed Prompt (on Cloudera AI)</div>
+        <div id="maskedOutput" class="masked-output">Analysis results will appear here...</div>
+    </div>
+</div>
+
+<script>
+    const presets = {{ presets|tojson }};
+
+    function loadPreset(id) {
+        const item = presets.find(p => p.id === id);
+        if (item) {
+            document.getElementById('inputText').value = item.text;
+        }
+    }
+
+    async function processText() {
+        const text = document.getElementById('inputText').value;
+        if (!text.trim()) return;
+
+        try {
+            const response = await fetch('./api/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: text })
+            });
+
+            const data = await response.json();
+            
+            const scoreVal = document.getElementById('scoreVal');
+            scoreVal.innerText = data.risk_score + '%';
+            if (data.risk_score < 70) {
+                scoreVal.className = 'score-value score-danger';
+            } else {
+                scoreVal.className = 'score-value score-safe';
+            }
+
+            const riskTagsDiv = document.getElementById('riskTags');
+            riskTagsDiv.innerHTML = '';
+            if (data.risks.length === 0) {
+                riskTagsDiv.innerHTML = '<span style="color:var(--green-accent); font-size:0.85rem; font-weight:bold;">✔ No Risks Detected (Safe)</span>';
+            } else {
+                data.risks.forEach(r => {
+                    riskTagsDiv.innerHTML += `<span class="tag">🚨 ${r}</span>`;
+                });
+            }
+
+            document.getElementById('maskedOutput').innerText = data.masked_text;
+
+        } catch (err) {
+            console.error(err);
+            alert('An error occurred during analysis.');
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+name: Cloudera Sovereign Guard
+description: Air-gapped enterprise AI governance gateway for real-time PII & confidential secret masking.
+author: Cloudera AI Demo Team
+specification_version: 1.0
+prototype_version: 1.0
+date: "2026-09-28"
+
+runtimes:
+  - editor: Workbench
+    kernel: Python 3.10
+    edition: Standard
+
+tasks:
+  - type: create_job
+    name: Install Dependencies
+    entity_label: install_deps
+    script: cml/install_deps.py
+    arguments: None
+    cpu: 1
+    memory: 2
+    short_summary: Create job to install project dependencies.
+    long_summary: Create job to install required Python packages for Cloudera Sovereign Guard.
+    environment:
+      TASK_TYPE: CREATE/RUN_JOB
+
+  - type: run_job
+    entity_label: install_deps
+    short_summary: Run dependency installation job.
+    long_summary: Execute the job to install Flask and required packages.
+
+  - type: start_application
+    name: Cloudera Sovereign Guard UI
+    subdomain: sovereign-guard
+    script: app.py
+    cpu: 1
+    memory: 2
+    short_summary: Launch the Cloudera Sovereign Guard Web Application.
+    long_summary: Start the Flask web application to serve the governance dashboard.
+    environment_variables:
+      TASK_TYPE: START_APPLICATION

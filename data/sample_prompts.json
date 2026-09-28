@@ -1,0 +1,17 @@
+[
+  {
+    "id": "leak_customer",
+    "label": "🚨 PII & Credit Card Leakage Risk",
+    "text": "Customer complaint from John Smith (Email: john.smith@example.com, Phone: 090-1234-5678). Please provide instructions for refund processing to card number 4532-1122-3344-5566."
+  },
+  {
+    "id": "leak_confidential",
+    "label": "🔒 Confidential Project & Key Leakage Risk",
+    "text": "Drafting technical specs for next-gen AI engine Project-Valhalla (SECRET-KEY: SK-9981-X7Z). Please suggest source code optimization and algorithm design."
+  },
+  {
+    "id": "green_heavy_doc",
+    "label": "🌿 Heavy Document Summary (Green AI Sim)",
+    "text": "As part of driving our Anywhere Cloud initiative, we are focused on enhancing data governance and security across hybrid cloud environments. Ensuring compliance (GDPR, CCPA, etc.) during data movement between on-premises and multiple public clouds is a top priority, making unified access control and audit logging via SDX (Shared Data Experience) essential. This project aims to enforce encryption and authentication across all data pipelines while simultaneously achieving energy efficiency (Green AI) for AI/ML workloads."
+  }
+]
