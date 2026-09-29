@@ -72,11 +72,11 @@ def analyze_and_compute(text):
     # =========================================================================
     
     patterns = {
-        "Credit Card Number": (r'\b(?:\d[ -]*?){13,16}\b', 'XXXX-XXXX-XXXX-1234'),
+        "Credit Card Number": (r'\b(?:\d[ -]*?){13,16}\b', '9999-9999-9999-9999'),
         "Email Address": (r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', 'xxxx@masked-domain.com'),
-        "Phone Number": (r'\b0\d{1,4}[-(]?\d{1,4}[-)]?\d{3,4}\b', '+99-99-9999-9999'),
+        "Phone Number": (r'(?:\+\d{1,4}[- ]?|\b0)\d{1,4}[- ]?\d{1,4}[- ]?\d{3,4}\b', '+99-99-9999-9999'),
         "Project Code": (r'\b[Pp]roject-[a-zA-Z0-9.-]+\b', 'Project-[confidential]'),
-        "Secret Key": (r'\bSK-\d{4}-[A-Za-z0-9]{3}\b', 'SK-1234-ABC')
+        "Secret Key": (r'\bSK-\d{4}-[A-Za-z0-9]{3}\b', 'SK-9999-XXX')
     }
 
     for risk_type, (pattern, replacement) in patterns.items():
