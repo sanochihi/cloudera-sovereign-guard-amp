@@ -10,7 +10,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__)) if '__file__' in globals()
 if os.path.exists(os.path.join(BASE_DIR, "templates")):
     APP_DIR = BASE_DIR
 else:
-    APP_DIR = "/home/cdsw/wild-chihiro/demo1"
+    # CHANGE THIS DIRECTORY TO YOUR OWN PROJECT FILE'S PATH
+    # /home/cdsw/ is the fixed home directory path
+    APP_DIR = "/home/cdsw/wild-chihiro/demo2"
 
 TEMPLATE_DIR = os.path.join(APP_DIR, "templates")
 JSON_PATH = os.path.join(APP_DIR, "data", "sample_prompts.json")
@@ -70,10 +72,11 @@ def analyze_and_compute(text):
     # =========================================================================
     
     patterns = {
-        "Credit Card Number": (r'\b(?:\d[ -]*?){13,16}\b', '[MASKED_CREDIT_CARD]'),
-        "Email Address": (r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', '[MASKED_EMAIL]'),
-        "Phone Number": (r'\b0\d{1,4}[-(]?\d{1,4}[-)]?\d{3,4}\b', '[MASKED_PHONE]'),
-        "Secret Key / Project Code": (r'(SECRET-[A-Z0-9-]+|Project-[A-Za-z0-9]+)', '[MASKED_CONFIDENTIAL]')
+        "Credit Card Number": (r'\b(?:\d[ -]*?){13,16}\b', 'XXXX-XXXX-XXXX-1234'),
+        "Email Address": (r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', 'xxxx@masked-domain.com'),
+        "Phone Number": (r'\b0\d{1,4}[-(]?\d{1,4}[-)]?\d{3,4}\b', '090-XXXX-XXXX'),
+        "Project Code": (r'\b[Pp]roject-[a-zA-Z0-9.-]+\b', 'Project-[confidential]'),
+        "Secret Key": (r'\bSK-\d{4}-[A-Za-z0-9]{3}\b', 'SK-1234-ABC')
     }
 
     for risk_type, (pattern, replacement) in patterns.items():
